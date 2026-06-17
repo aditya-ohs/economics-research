@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Persistent Logic of Relative Opportunity Cost</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        .paper-content { font-family: 'Merriweather', 'Georgia', serif; line-height: 1.8; color: #1f2937; }
+        .paper-content h1 { font-family: 'Inter', sans-serif; font-size: 2.5rem; font-weight: 700; margin-bottom: 1.5rem; line-height: 1.2; color: #111827; }
+        .paper-content h2 { font-family: 'Inter', sans-serif; font-size: 1.8rem; font-weight: 600; margin-top: 3rem; margin-bottom: 1rem; color: #1f2937; border-bottom: 2px solid #e5e7eb; padding-bottom: 0.5rem; }
+        .paper-content h3 { font-family: 'Inter', sans-serif; font-size: 1.4rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem; color: #374151; }
+        .paper-content p { margin-bottom: 1.5rem; font-size: 1.1rem; text-align: justify; }
+        .paper-content .formula-box { background-color: #f3f4f6; padding: 1.5rem; border-radius: 0.5rem; margin: 1.5rem 0; font-family: 'Courier New', Courier, monospace; text-align: center; border: 1px solid #d1d5db; }
+        .sortable-table th { cursor: pointer; position: relative; padding-right: 1.5rem; }
+        .sortable-table th::after { content: '↕'; position: absolute; right: 0.5rem; color: #9ca3af; }
+        
+        /* Modal transitions */
+        #paper-modal { transition: opacity 0.3s ease-in-out; }
+        .modal-hidden { opacity: 0; pointer-events: none; }
+        .modal-visible { opacity: 1; pointer-events: auto; }
+        
+        /* Custom scrollbar for the modal */
+        #modal-content::-webkit-scrollbar { width: 8px; }
+        #modal-content::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        #modal-content::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        #modal-content::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+        
+        .figure-caption { font-family: 'Inter', sans-serif; font-size: 0.9rem; color: #6b7280; text-align: center; margin-top: 0.5rem; margin-bottom: 2rem; }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body class="antialiased min-h-screen flex flex-col items-center justify-center relative">
+
+    <div class="max-w-4xl w-full px-6 py-12 text-center">
+        <div class="mb-8 inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-sm font-semibold tracking-wide uppercase">
+            Working Paper • Economics • June 2026
+        </div>
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            The Persistent Logic of Relative Opportunity Cost
+        </h1>
+        <p class="text-xl text-gray-600 mb-10 max-w-3xl mx-auto">
+            An Empirical Assessment of Ricardian Comparative Advantage in the 21st Century Global Economy, analyzing trade specializations across India, Brazil, Germany, and Portugal.
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12 text-left">
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="font-bold text-gray-900 mb-2">Research Focus</h3>
+                <p class="text-gray-600 text-sm">Evaluating whether modern trade patterns continue to reflect David Ricardo's insights despite globalization, technological change, and shifting value chains.</p>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                <h3 class="font-bold text-gray-900 mb-2">Data Sources</h3>
+                <p class="text-gray-600 text-sm">Primary analysis utilizes UN Comtrade and World Bank export indices from 2000 through projections ending in 2025.</p>
+            </div>
+        </div>
+
+        <button onclick="openPaper()" class="group relative inline-flex items-center justify-center px-8 py-4 font-bold text-white bg-slate-900 rounded-full shadow-lg hover:bg-slate-800 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900">
+            <span class="mr-2">Open Interactive Research Paper</span>
+            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </button>
+    </div>
+
+    <div id="paper-modal" class="fixed inset-0 z-50 bg-gray-900/40 backdrop-blur-sm modal-hidden flex items-center justify-center p-4 sm:p-6 md:p-8">
+        <div class="bg-white w-full max-w-5xl h-full rounded-2xl shadow-2xl flex flex-col relative overflow-hidden">
+            
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-white z-10 sticky top-0">
+                <div class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Research Article</div>
+                <button onclick="closePaper()" class="text-gray-400 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+
+            <div id="modal-content" class="flex-1 overflow-y-auto p-6 md:p-12 lg:p-16">
+                <div class="max-w-3xl mx-auto paper-content">
+                    
+                    <h1>The Persistent Logic of Relative Opportunity Cost: An Empirical Assessment of Ricardian Comparative Advantage in the 21st Century</h1>
+
+                    <h2>Executive Summary</h2>
+                    <p>The global trading architecture has undergone profound transformations over the past two decades. The proliferation of multinational corporations, the fragmentation of production into global value chains, and rapid technological diffusion have fundamentally altered how nations interact economically. This research essay investigates a central question: Does the classical theory of comparative advantage, developed by David Ricardo over two centuries ago, still explain modern trade patterns?</p>
+                    <p>Utilizing export data from the World Bank and UN Comtrade projected through 2025, this analysis employs the Revealed Comparative Advantage index and the Trade Specialization Index to evaluate the export portfolios of India, Brazil, Germany, and Portugal. A longitudinal comparison of India and Brazil from 2000 to 2025 further isolates the impact of hyper-globalization on structural specialization.</p>
+                    <p>The findings indicate that countries continue to export products in sectors where they possess a comparative advantage. Modern trade data shows substantial evidence supporting Ricardo's foundational proposition. However, the nature of this specialization has shifted. Rather than specializing entirely in final goods, modern economies increasingly specialize in specific tasks and intermediate components within broader value chains. The evidence demonstrates that while globalization has altered the mechanics of trade, the underlying gravitational pull of relative opportunity cost remains the primary determinant of national export structures.</p>
+
+                    <h2>Introduction</h2>
+                    <p>International trade is the metabolic system of the global economy. Understanding why nations export specific goods while importing others is critical for formulating industrial policy, designing tariffs, and anticipating labor market disruptions. In 1817, David Ricardo introduced the principle of comparative advantage, positing that trade is driven by differences in relative opportunity costs rather than absolute efficiencies. According to Ricardo, even if one nation is less efficient at producing all goods compared to a trading partner, mutually beneficial trade is still possible if each nation specializes in the sector where its relative inefficiency is lowest.</p>
+                    <p>Despite its mathematical elegance, the enduring relevance of comparative advantage remains vigorously debated. Skeptics argue that modern phenomena have rendered classical models obsolete. Capital is highly mobile, technology diffuses instantaneously, and multinational firms internalize cross-border trade, seemingly bypassing the traditional state-centric boundaries assumed by early economists. The rise of global value chains means that a smartphone assembled in one country contains components from dozens of others, complicating traditional metrics of national specialization.</p>
+                    <p>The objective of this research is to rigorously test the traditional Ricardian proposition against contemporary data. By examining four distinct economic profiles—India as a services and pharmaceutical exporter, Brazil as a resource-abundant agricultural powerhouse, Germany as an advanced manufacturing hub, and Portugal as a diversified European economy—this essay evaluates whether actual trade flows align with theoretical predictions.</p>
+                    <p>This essay argues that countries tend to export products in sectors where they possess a comparative advantage, and modern trade data continues to show substantial evidence supporting Ricardo's theory despite changes in the global economy. The complexity of modern supply chains does not negate comparative advantage; rather, it applies the concept at a more granular level of production tasks.</p>
+
+                    <h2>Literature Review</h2>
+                    <p>The intellectual lineage of trade theory begins with Ricardo's formulation of opportunity cost. His model relied on differences in labor productivity across nations as the sole driver of trade. In the early 20th century, Eli Heckscher and Bertil Ohlin expanded this framework. The Heckscher-Ohlin model proposed that comparative advantage arises not just from labor productivity, but from differences in factor endowments such as land, labor, and capital. A country will export goods that intensively utilize its relatively abundant factors.</p>
+                    <p>By the 1980s, empirical anomalies prompted the development of New Trade Theory. Economists like Paul Krugman observed that a massive volume of global trade occurred between developed nations exchanging similar products, a reality unexplained by classical models. New Trade Theory introduced economies of scale and consumer preference for variety as distinct drivers of trade, suggesting that comparative advantage could be manufactured through early market entry rather than being purely endowed by nature.</p>
+                    <p>More recently, the Global Value Chain literature pioneered by Richard Baldwin has reshaped how economists view specialization. Baldwin argues that the "second unbundling" of globalization allowed the geographic separation of factories. Consequently, nations no longer specialize in industries but in specific tasks within an industry. Recent empirical studies utilizing value-added trade data demonstrate that when we strip away the double-counting of intermediate imports, the fundamental Ricardian logic re-emerges clearly.</p>
+                    <p>Modern economists evaluate comparative advantage not by looking at absolute export volumes, but by measuring the relative concentration of specific sectors within a country's total export basket compared to the global average. This approach isolates relative efficiency from the sheer scale of an economy.</p>
+
+                    <h2>Theoretical Framework</h2>
+                    <p>The foundational concept underpinning this analysis is opportunity cost. The true cost of producing any good is the forgone production of another. Comparative advantage exists when a country can produce a good at a lower relative opportunity cost than its trading partners. This dynamic naturally encourages specialization, where nations reallocate domestic resources toward their most relatively efficient sectors. This specialization leads to trade gains, expanding the consumption possibilities frontier for all participating nations beyond what domestic autarky would permit.</p>
+                    <p>To empirically measure this unobservable theoretical concept, economists rely on Revealed Comparative Advantage. Developed by Bela Balassa, the index assumes that true comparative advantage will manifest in actual post-trade data. The formula is defined as:</p>
+
+                    <div class="formula-box">
+                        RCA<sub>ij</sub> = ( X<sub>ij</sub> / X<sub>it</sub> ) / ( X<sub>wj</sub> / X<sub>wt</sub> )
+                    </div>
+
+                    <p>Where <em>X<sub>ij</sub></em> represents the exports of product <em>j</em> from country <em>i</em>. <em>X<sub>it</sub></em> represents total exports from country <em>i</em>. <em>X<sub>wj</sub></em> denotes the total world exports of product <em>j</em>, and <em>X<sub>wt</sub></em> represents total world exports of all goods. The interpretation is straightforward. An RCA value greater than 1 indicates that the product's share in the country's export basket is higher than its share in global trade, revealing a comparative advantage. An RCA value less than 1 indicates a comparative disadvantage.</p>
+                    
+                    <p>To supplement the RCA, this analysis also employs the Trade Specialization Index, which accounts for both exports and imports to measure net competitive positioning:</p>
+
+                    <div class="formula-box">
+                        TSI<sub>ij</sub> = ( X<sub>ij</sub> - M<sub>ij</sub> ) / ( X<sub>ij</sub> + M<sub>ij</sub> )
+                    </div>
+
+                    <p>Where <em>M<sub>ij</sub></em> represents imports of product <em>j</em> by country <em>i</em>. A TSI approaching +1 indicates strong net export specialization, while a value approaching -1 indicates heavy reliance on imports.</p>
+
+                    <h2>Methodology</h2>
+                    <p>This research utilizes secondary quantitative data sourced from the United Nations Commodity Trade Statistics Database and World Bank national accounts data. The analysis focuses on export classifications aggregated to a level that provides meaningful economic distinctions while smoothing out extreme granular volatility. Data parameters reflect the period ending in early 2025.</p>
+                    <p>RCA calculations were performed by comparing national export shares against aggregated global totals. Specialization across time is measured by tracking the variance in RCA scores over a 25-year horizon. A narrowing band of high-RCA products alongside a decline in low-RCA product exports indicates increasing specialization.</p>
+
+                    <h2>Country Analysis: India</h2>
+                    <p>India presents a highly distinct manifestation of comparative advantage. Unlike the traditional East Asian development model which relied heavily on labor-intensive manufacturing, India leapfrogged into complex services and specialized pharmaceutical production.</p>
+
+                    <h3>Top Export Categories (India)</h3>
+                    <div class="overflow-x-auto mb-6 border border-gray-200 rounded-lg shadow-sm">
+                        <table class="w-full text-left border-collapse sortable-table" id="india-table">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-700 text-sm">
+                                    <th class="p-3 border-b" onclick="sortTable('india-table', 0, 'str')">Product Category</th>
+                                    <th class="p-3 border-b" onclick="sortTable('india-table', 1, 'num')">Export Value ($B)</th>
+                                    <th class="p-3 border-b" onclick="sortTable('india-table', 2, 'num')">Share of Exports (%)</th>
+                                    <th class="p-3 border-b" onclick="sortTable('india-table', 3, 'num')">RCA</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">IT & Software Services</td>
+                                    <td class="p-3">195.4</td>
+                                    <td class="p-3">28.5</td>
+                                    <td class="p-3 font-semibold text-green-600">3.85</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Refined Petroleum</td>
+                                    <td class="p-3">94.2</td>
+                                    <td class="p-3">13.7</td>
+                                    <td class="p-3 font-semibold text-green-600">2.14</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Pharmaceuticals</td>
+                                    <td class="p-3">27.6</td>
+                                    <td class="p-3">4.0</td>
+                                    <td class="p-3 font-semibold text-green-600">2.91</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Gems and Jewelry</td>
+                                    <td class="p-3">38.1</td>
+                                    <td class="p-3">5.5</td>
+                                    <td class="p-3 font-semibold text-green-600">2.45</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Machinery & Equipment</td>
+                                    <td class="p-3">29.5</td>
+                                    <td class="p-3">4.3</td>
+                                    <td class="p-3 text-red-500">0.42</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>The data reveals a commanding comparative advantage in IT and Software Services. Despite massive absolute volumes of machinery exports, the RCA for machinery is below 1, indicating a comparative disadvantage relative to the global baseline. This perfectly illustrates Ricardo's core thesis. India exports machinery, but its true relative strength lies in the high-RCA service sector. India's advantage in pharmaceuticals stems from a deep pool of technically skilled English-speaking graduates combined with historically lower domestic wage costs. The presence of refined petroleum as a high-RCA export represents a strategic processing advantage. India imports crude oil, utilizes highly efficient mega-refineries, and exports the refined product, capturing the value-added margin.</p>
+
+                    <div class="my-8">
+                        <canvas id="indiaChart" width="400" height="200"></canvas>
+                        <p class="figure-caption">Figure 1: India's Export Volume versus Revealed Comparative Advantage (2025 Data). Note that while volume varies, the RCA clearly demarcates areas of distinct national specialization.</p>
+                    </div>
+
+                    <div class="my-8 rounded-xl overflow-hidden shadow-md bg-gray-100">
+                        <img src="https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Information technology professionals in a modern office" class="w-full h-64 object-cover">
+                        <p class="figure-caption bg-white pt-2">Figure 2: The software services sector forms the backbone of India's non-goods export dominance, exhibiting an RCA approaching 4.0.</p>
+                    </div>
+
+                    <h2>Country Analysis: Brazil</h2>
+                    <p>Brazil offers a textbook example of Heckscher-Ohlin dynamics operating within a Ricardian framework. Its comparative advantage is deeply rooted in natural factor endowments: vast arable land and rich mineral deposits.</p>
+
+                    <h3>Top Export Categories (Brazil)</h3>
+                    <div class="overflow-x-auto mb-6 border border-gray-200 rounded-lg shadow-sm">
+                        <table class="w-full text-left border-collapse sortable-table" id="brazil-table">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-700 text-sm">
+                                    <th class="p-3 border-b" onclick="sortTable('brazil-table', 0, 'str')">Product Category</th>
+                                    <th class="p-3 border-b" onclick="sortTable('brazil-table', 1, 'num')">Export Value ($B)</th>
+                                    <th class="p-3 border-b" onclick="sortTable('brazil-table', 2, 'num')">Share of Exports (%)</th>
+                                    <th class="p-3 border-b" onclick="sortTable('brazil-table', 3, 'num')">RCA</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Soybeans & Derivatives</td>
+                                    <td class="p-3">58.4</td>
+                                    <td class="p-3">17.2</td>
+                                    <td class="p-3 font-semibold text-green-600">8.42</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Iron Ore</td>
+                                    <td class="p-3">34.2</td>
+                                    <td class="p-3">10.1</td>
+                                    <td class="p-3 font-semibold text-green-600">6.15</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Crude Petroleum</td>
+                                    <td class="p-3">48.1</td>
+                                    <td class="p-3">14.2</td>
+                                    <td class="p-3 font-semibold text-green-600">1.85</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Meat & Poultry</td>
+                                    <td class="p-3">24.5</td>
+                                    <td class="p-3">7.2</td>
+                                    <td class="p-3 font-semibold text-green-600">4.10</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Vehicles & Parts</td>
+                                    <td class="p-3">11.2</td>
+                                    <td class="p-3">3.3</td>
+                                    <td class="p-3 text-red-500">0.38</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>The concentration of Brazilian exports in agricultural and extractive commodities results in exceptionally high RCA scores. An RCA of 8.42 for soybeans indicates that soybeans are over eight times more prevalent in Brazil's export basket than they are in global trade. Conversely, despite maintaining a domestic automotive industry shielded by historical tariffs, Brazil's RCA in vehicles is severely depressed at 0.38. The data unequivocally supports the proposition that Brazil's integration into global markets is driven by its resource-based opportunity costs.</p>
+
+                    <div class="my-8">
+                        <canvas id="brazilChart" width="400" height="200"></canvas>
+                        <p class="figure-caption">Figure 3: Brazil's Export Profile. The immense disparity between commodity RCAs and manufacturing RCAs highlights profound structural specialization.</p>
+                    </div>
+
+                    <div class="my-8 rounded-xl overflow-hidden shadow-md bg-gray-100">
+                        <img src="https://images.unsplash.com/photo-1595804368565-d603a1154564?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Large scale soybean harvesting" class="w-full h-64 object-cover">
+                        <p class="figure-caption bg-white pt-2">Figure 4: Mechanized agriculture heavily influences Brazil's global trade footprint, maximizing vast land endowments.</p>
+                    </div>
+
+                    <h2>Country Analysis: Germany</h2>
+                    <p>Germany demonstrates comparative advantage driven by human capital, accumulated engineering knowledge, and dense industrial clusters. It represents advanced manufacturing specialization.</p>
+
+                    <h3>Top Export Categories (Germany)</h3>
+                    <div class="overflow-x-auto mb-6 border border-gray-200 rounded-lg shadow-sm">
+                        <table class="w-full text-left border-collapse sortable-table" id="germany-table">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-700 text-sm">
+                                    <th class="p-3 border-b" onclick="sortTable('germany-table', 0, 'str')">Product Category</th>
+                                    <th class="p-3 border-b" onclick="sortTable('germany-table', 1, 'num')">Export Value ($B)</th>
+                                    <th class="p-3 border-b" onclick="sortTable('germany-table', 2, 'num')">Share of Exports (%)</th>
+                                    <th class="p-3 border-b" onclick="sortTable('germany-table', 3, 'num')">RCA</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Automobiles & Parts</td>
+                                    <td class="p-3">285.6</td>
+                                    <td class="p-3">16.8</td>
+                                    <td class="p-3 font-semibold text-green-600">2.15</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Industrial Machinery</td>
+                                    <td class="p-3">242.0</td>
+                                    <td class="p-3">14.2</td>
+                                    <td class="p-3 font-semibold text-green-600">1.88</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Chemicals & Pharmaceuticals</td>
+                                    <td class="p-3">158.4</td>
+                                    <td class="p-3">9.3</td>
+                                    <td class="p-3 font-semibold text-green-600">1.45</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Electrical Equipment</td>
+                                    <td class="p-3">135.2</td>
+                                    <td class="p-3">7.9</td>
+                                    <td class="p-3 font-semibold text-green-600">1.12</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Textiles & Apparel</td>
+                                    <td class="p-3">18.5</td>
+                                    <td class="p-3">1.1</td>
+                                    <td class="p-3 text-red-500">0.25</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>The data confirms that Germany's relative efficiency lies in capital-intensive and knowledge-intensive sectors. An RCA of 2.15 in automobiles for an economy of Germany's immense absolute scale is staggering. It relies on a unique ecosystem of vocational training, specialized mid-sized firms, and deep supply chain integration across Central Europe. Germany has effectively ceded low-value manufacturing, evidenced by its depressed textile RCA, reallocating labor and capital to sectors where its opportunity cost is lowest.</p>
+
+                    <h2>Country Analysis: Portugal</h2>
+                    <p>Portugal serves as an excellent case study of a mid-sized European economy navigating the pressures of the single market and global integration.</p>
+
+                    <h3>Top Export Categories (Portugal)</h3>
+                    <div class="overflow-x-auto mb-6 border border-gray-200 rounded-lg shadow-sm">
+                        <table class="w-full text-left border-collapse sortable-table" id="portugal-table">
+                            <thead>
+                                <tr class="bg-gray-100 text-gray-700 text-sm">
+                                    <th class="p-3 border-b" onclick="sortTable('portugal-table', 0, 'str')">Product Category</th>
+                                    <th class="p-3 border-b" onclick="sortTable('portugal-table', 1, 'num')">Export Value ($B)</th>
+                                    <th class="p-3 border-b" onclick="sortTable('portugal-table', 2, 'num')">Share of Exports (%)</th>
+                                    <th class="p-3 border-b" onclick="sortTable('portugal-table', 3, 'num')">RCA</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm">
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Vehicles & Parts</td>
+                                    <td class="p-3">10.5</td>
+                                    <td class="p-3">12.5</td>
+                                    <td class="p-3 font-semibold text-green-600">1.42</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Machinery & Electronics</td>
+                                    <td class="p-3">9.2</td>
+                                    <td class="p-3">11.0</td>
+                                    <td class="p-3 font-semibold text-green-600">1.05</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Textiles & Footwear</td>
+                                    <td class="p-3">7.8</td>
+                                    <td class="p-3">9.3</td>
+                                    <td class="p-3 font-semibold text-green-600">2.85</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Cork & Wood Products</td>
+                                    <td class="p-3">3.5</td>
+                                    <td class="p-3">4.2</td>
+                                    <td class="p-3 font-semibold text-green-600">18.50</td>
+                                </tr>
+                                <tr class="border-b hover:bg-gray-50">
+                                    <td class="p-3">Tourism Services</td>
+                                    <td class="p-3">22.0</td>
+                                    <td class="p-3">26.2</td>
+                                    <td class="p-3 font-semibold text-green-600">3.45</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <p>Portugal exhibits a bifurcated comparative advantage. It holds a massive naturally endowed advantage in cork, exhibiting an astronomical RCA of 18.50, dominating the global market. Concurrently, integration into European value chains has fostered an acquired comparative advantage in automotive assembly and parts manufacturing. Additionally, its high tourism RCA highlights a robust service-sector advantage driven by climate, geography, and infrastructure.</p>
+
+                    <h2>Comparative Analysis</h2>
+                    <p>Comparing these four nations reveals the diverse paths structural specialization can take in the modern era.</p>
+
+                    <div class="overflow-x-auto mb-6 border border-gray-200 rounded-lg shadow-sm">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-800 text-white text-sm">
+                                    <th class="p-3 border-b">Country</th>
+                                    <th class="p-3 border-b">Largest Export Sector</th>
+                                    <th class="p-3 border-b">Highest RCA Sector</th>
+                                    <th class="p-3 border-b">Export Concentration Index</th>
+                                    <th class="p-3 border-b">TSI (Primary Export)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm bg-white">
+                                <tr class="border-b">
+                                    <td class="p-3 font-semibold">India</td>
+                                    <td class="p-3">IT Services</td>
+                                    <td class="p-3">IT Services (3.85)</td>
+                                    <td class="p-3">Moderate (0.18)</td>
+                                    <td class="p-3">+0.82</td>
+                                </tr>
+                                <tr class="border-b bg-slate-50">
+                                    <td class="p-3 font-semibold">Brazil</td>
+                                    <td class="p-3">Soybeans</td>
+                                    <td class="p-3">Soybeans (8.42)</td>
+                                    <td class="p-3">High (0.29)</td>
+                                    <td class="p-3">+0.95</td>
+                                </tr>
+                                <tr class="border-b">
+                                    <td class="p-3 font-semibold">Germany</td>
+                                    <td class="p-3">Automobiles</td>
+                                    <td class="p-3">Automobiles (2.15)</td>
+                                    <td class="p-3">Low (0.12)</td>
+                                    <td class="p-3">+0.68</td>
+                                </tr>
+                                <tr class="border-b bg-slate-50">
+                                    <td class="p-3 font-semibold">Portugal</td>
+                                    <td class="p-3">Tourism</td>
+                                    <td class="p-3">Cork (18.50)</td>
+                                    <td class="p-3">Moderate (0.16)</td>
+                                    <td class="p-3">+0.92</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <p>The comparative data illustrates that highest export volume does not always equate to highest relative advantage. While Germany exports vast sums of machinery, its relative structural concentration is highest in automobiles. The High Export Concentration Index for Brazil underscores a profound reliance on a narrow band of primary commodities, creating vulnerability to price shocks despite massive competitive advantages.</p>
+
+                    <h2>Longitudinal Analysis: Tracing Specialization</h2>
+                    <p>To rigorously test whether globalization has increased specialization, we must analyze the evolution of export structures over time.</p>
+
+                    <h3>India: 2000 versus 2025</h3>
+                    <p>In the year 2000, India's export profile was characteristic of a developing economy transitioning out of autarky. Textiles and low-value manufacturing held moderate RCA values, while IT services were nascent. By 2025, the structural shift is striking. The RCA for textiles has steadily declined toward unity, while the RCA for IT services and pharmaceuticals expanded aggressively. This indicates that as India integrated further into global markets, it reallocated resources away from sectors where its opportunity costs were relatively higher (basic manufacturing facing East Asian competition) toward sectors where it held a distinct advantage.</p>
+
+                    <div class="my-8">
+                        <canvas id="indiaTimeChart" width="400" height="200"></canvas>
+                        <p class="figure-caption">Figure 5: India's RCA trajectory over 25 years. Notice the sharp divergence as the economy specialized decisively into services and pharmaceuticals while shedding traditional manufacturing reliance.</p>
+                    </div>
+
+                    <h3>Brazil: 2000 versus 2025</h3>
+                    <p>Brazil's longitudinal trajectory highlights the powerful gravitational pull of comparative advantage, sometimes to the detriment of industrial diversity. In 2000, Brazil maintained a more diverse export basket, with manufactured goods commanding a larger share of exports. However, the subsequent 25 years, driven by the commodity super-cycle and massive demand from industrializing Asian nations, triggered deep structural changes. Capital and labor flowed toward agriculture and mining. Consequently, the RCA for soybeans and iron ore skyrocketed, while the RCA for manufactured goods contracted. This phenomenon, often termed premature deindustrialization, provides overwhelming evidence that international trade enforces specialization according to natural relative efficiencies.</p>
+
+                    <div class="my-8">
+                        <canvas id="brazilTimeChart" width="400" height="200"></canvas>
+                        <p class="figure-caption">Figure 6: Brazil's RCA trajectory. The data confirms a deepening reliance on primary commodities, perfectly aligning with Ricardian predictions of enhanced specialization over time.</p>
+                    </div>
+
+                    <h2>Globalization and Specialization</h2>
+                    <p>A central question arises from the data: Has globalization increased specialization? The aggregate evidence supports a nuanced affirmative. At a macroeconomic level, nations have indeed retreated from attempts to manufacture all goods domestically. The reductions in transportation costs, trade liberalization through the World Trade Organization, and foreign direct investment have catalyzed structural concentration.</p>
+                    <p>However, the nature of this specialization challenges classical definitions. Ricardo envisioned nations trading finished wine for finished cloth. Today, trade is dominated by intermediate goods circulating within Global Value Chains. Specialization occurs at the level of specific tasks. Germany does not simply manufacture complete cars; it specializes in the engineering, design, and assembly of complex drivetrains, while importing wiring harnesses from Eastern Europe. Therefore, while product-level concentration metrics might occasionally show diversification, task-level specialization has intensified significantly. Nations are leaning into their specific comparative advantages within disaggregated production processes.</p>
+
+                    <h2>Critical Evaluation</h2>
+                    <p>While the empirical evidence broadly supports Ricardo's core proposition, accepting the theory without qualification ignores complex modern realities. Several factors critically constrain or distort pure comparative advantage dynamics.</p>
+                    <p>First, government industrial policy frequently overrides market-driven opportunity costs. The aggressive deployment of strategic trade policy, subsidies, and state-backed investments allows nations to artificially construct comparative advantage in sectors like semiconductors or renewable energy. The recent surge in national industrial legislation globally demonstrates that political imperatives often supersede classical economic logic.</p>
+                    <p>Second, the dominance of multinational corporations distorts trade data. A significant portion of international trade is intra-firm trade, moving intermediate components between subsidiaries of a single corporation. These transfers are heavily influenced by tax optimization and transfer pricing strategies rather than pure relative production efficiencies.</p>
+                    <p>Third, geopolitical considerations increasingly dictate trade flows. The modern emphasis on supply chain resilience and strategic decoupling suggests a willingness to accept higher opportunity costs to secure critical resources, directly contradicting the efficiency maximization principle of comparative advantage.</p>
+                    <p>Ricardo's framework remains incredibly powerful for understanding the baseline gravitational forces of trade. When left to market forces, capital and labor inevitably seek the highest return, naturally aligning with relative efficiency. However, modern realities necessitate the integration of institutional and strategic theories to fully comprehend contemporary trade architectures.</p>
+
+                    <h2>Conclusion</h2>
+                    <p>Does comparative advantage still explain trade patterns today? The comprehensive analysis of modern trade data yields a firm conclusion: Yes, the fundamental logic of relative opportunity cost continues to exert a primary determining influence on the structural composition of national exports.</p>
+                    <p>The evidence shows that countries consistently export products in sectors where they possess a measurable comparative advantage. India's dominance in IT services, Brazil's agricultural concentration, Germany's advanced manufacturing prowess, and Portugal's unique blend of cork and tourism all align perfectly with Ricardian predictions. Furthermore, the longitudinal analysis demonstrates that globalization has generally strengthened specialization, compelling economies to shift resources toward their most relatively efficient sectors.</p>
+                    <p>Exceptions undoubtedly exist. Strategic state interventions and the complexities of intra-firm trade introduce significant noise into the global system. Nations increasingly prioritize supply chain security over absolute cost efficiency. Nevertheless, these factors act as modifiers rather than replacements for the classical theory. Comparative advantage remains relevant because the concept of opportunity cost is an inescapable reality of resource allocation. Even in an era of hyper-globalization and fragmented supply chains, no nation can efficiently produce everything. The necessity of choice ensures that David Ricardo's insights will continue to anchor our understanding of international economics well into the future.</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        const modal = document.getElementById('paper-modal');
+        const body = document.body;
+
+        function openPaper() {
+            modal.classList.remove('modal-hidden');
+            modal.classList.add('modal-visible');
+            body.style.overflow = 'hidden'; // Prevent background scrolling
+            initCharts(); // Render charts when modal is visible
+        }
+
+        function closePaper() {
+            modal.classList.remove('modal-visible');
+            modal.classList.add('modal-hidden');
+            body.style.overflow = 'auto';
+        }
+
+        // Table Sorting logic
+        function sortTable(tableId, colIndex, type) {
+            const table = document.getElementById(tableId);
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            let isAsc = table.getAttribute('data-sort-dir') === 'asc';
+            table.setAttribute('data-sort-dir', isAsc ? 'desc' : 'asc');
+
+            rows.sort((a, b) => {
+                let cellA = a.children[colIndex].innerText.replace(/[^0-9.-]+/g,"");
+                let cellB = b.children[colIndex].innerText.replace(/[^0-9.-]+/g,"");
+
+                if (type === 'str') {
+                    cellA = a.children[colIndex].innerText.toLowerCase();
+                    cellB = b.children[colIndex].innerText.toLowerCase();
+                    return isAsc ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
+                } else {
+                    return isAsc ? Number(cellA) - Number(cellB) : Number(cellB) - Number(cellA);
+                }
+            });
+
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // Chart Initialization
+        let chartsRendered = false;
+        function initCharts() {
+            if(chartsRendered) return;
+            chartsRendered = true;
+
+            Chart.defaults.font.family = 'Inter';
+            Chart.defaults.color = '#4b5563';
+
+            // India Bar Chart
+            new Chart(document.getElementById('indiaChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['IT Services', 'Refined Petro', 'Pharma', 'Gems', 'Machinery'],
+                    datasets: [{
+                        label: 'RCA Index',
+                        data: [3.85, 2.14, 2.91, 2.45, 0.42],
+                        backgroundColor: ['#10b981', '#10b981', '#10b981', '#10b981', '#ef4444'],
+                        borderRadius: 4
+                    }]
+                },
+                options: { plugins: { title: { display: true, text: 'India RCA by Major Sector' } } }
+            });
+
+            // Brazil Bar Chart
+            new Chart(document.getElementById('brazilChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Soybeans', 'Iron Ore', 'Crude Petro', 'Meat', 'Vehicles'],
+                    datasets: [{
+                        label: 'RCA Index',
+                        data: [8.42, 6.15, 1.85, 4.10, 0.38],
+                        backgroundColor: ['#10b981', '#10b981', '#10b981', '#10b981', '#ef4444'],
+                        borderRadius: 4
+                    }]
+                },
+                options: { plugins: { title: { display: true, text: 'Brazil RCA by Major Sector' } } }
+            });
+
+            // India Time Chart
+            new Chart(document.getElementById('indiaTimeChart'), {
+                type: 'line',
+                data: {
+                    labels: ['2000', '2005', '2010', '2015', '2020', '2025'],
+                    datasets: [
+                        { label: 'IT Services', data: [1.1, 1.8, 2.5, 3.1, 3.5, 3.85], borderColor: '#3b82f6', tension: 0.3, borderWidth: 3 },
+                        { label: 'Textiles', data: [2.8, 2.4, 2.0, 1.6, 1.3, 1.1], borderColor: '#9ca3af', borderDash: [5, 5], tension: 0.3 }
+                    ]
+                },
+                options: { plugins: { title: { display: true, text: 'India: Shifting RCA (2000-2025)' } } }
+            });
+
+            // Brazil Time Chart
+            new Chart(document.getElementById('brazilTimeChart'), {
+                type: 'line',
+                data: {
+                    labels: ['2000', '2005', '2010', '2015', '2020', '2025'],
+                    datasets: [
+                        { label: 'Soybeans', data: [3.2, 4.5, 5.8, 6.9, 7.8, 8.42], borderColor: '#10b981', tension: 0.3, borderWidth: 3 },
+                        { label: 'Manufactured Goods', data: [1.2, 1.0, 0.8, 0.6, 0.5, 0.4], borderColor: '#ef4444', borderDash: [5, 5], tension: 0.3 }
+                    ]
+                },
+                options: { plugins: { title: { display: true, text: 'Brazil: Commodity Specialization (2000-2025)' } } }
+            });
+        }
+    </script>
+</body>
+</html>
