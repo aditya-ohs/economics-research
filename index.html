@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReView | Research Archive</title>
+    <title>ReView Research Archive</title>
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Editorial Typography -->
-    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
-    
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+        
         :root {
-            --color-sand: #f4f3ef;
+            --color-sand: #f5f4f0;
             --color-charcoal: #2b2d28;
             --color-olive: #787f6a;
             --color-beige: #e6e4dc;
+            --color-white: #ffffff;
         }
 
         body {
@@ -24,82 +24,114 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        h1, h2, h3, h4, .serif-font {
+        h1, h2, h3, h4, .serif {
             font-family: 'Playfair Display', serif;
         }
 
-        /* Strict UI Rules */
+        /* Strict square corners rule */
         * { border-radius: 0 !important; }
-        .sharp-border { border: 1px solid var(--color-charcoal); }
+
+        .book-spine-line {
+            width: 1px;
+            background: var(--color-charcoal);
+            opacity: 0.2;
+        }
         
-        .article-row { transition: background-color 0.4s ease; }
-        .article-row:hover { background-color: var(--color-beige); }
-        .article-row:hover .hover-arrow { transform: translateX(10px); opacity: 1; }
-        .hover-arrow { transition: all 0.4s ease; opacity: 0; transform: translateX(0); }
+        .article-card {
+            transition: all 0.4s ease;
+            border: 1px solid var(--color-beige);
+        }
+        .article-card:hover {
+            background-color: var(--color-white);
+            border-color: var(--color-olive);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col selection:bg-[#787f6a] selection:text-white">
-            <!-- WEEK 2: Published -->
-            <a href="kuznets-curve-replication.html" class="block article-card bg-white p-8 border border-slate-100 relative overflow-hidden group" style="border-radius: 0;">
-                <div class="absolute top-0 left-0 w-1 h-full bg-[#787f6a]"></div>
-                <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="pt-24 pb-16 px-6 border-b border-gray-300 bg-white">
+        <div class="max-w-4xl mx-auto text-center">
+            <span class="text-gray-500 font-semibold tracking-[0.2em] uppercase text-xs mb-6 block">Weekly Research Series</span>
+            <h1 class="text-6xl md:text-7xl text-gray-900 mb-8 font-normal tracking-tight serif">ReView Archive</h1>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed font-light">
+                An empirical economics publication evaluating established trade theories against modern data. A new interactive research paper is published every week.
+            </p>
+        </div>
+    </header>
+
+    <!-- Index / Table of Contents -->
+    <main class="flex-grow max-w-4xl mx-auto w-full px-6 py-20 relative flex">
+        
+        <!-- Decorative Spine -->
+        <div class="hidden md:block w-16 flex-shrink-0 relative">
+            <div class="absolute inset-y-0 left-6 book-spine-line"></div>
+        </div>
+
+        <div class="flex-grow space-y-12">
+            <h2 class="text-3xl text-gray-800 italic mb-12 pb-6 border-b border-gray-300 serif">Volume I: The Mechanics of Modern Trade</h2>
+
+            <!-- WEEK 1 -->
+            <a href="ricardo-comparative-advantage.html" class="block article-card bg-transparent p-10 relative group">
+                <div class="flex flex-col md:flex-row md:items-start justify-between gap-8">
                     <div>
-                        <div class="flex items-center space-x-3 mb-3">
-                            <span class="bg-[#e6e4dc] text-[#2b2d28] text-xs font-bold px-2 py-1 uppercase tracking-wider" style="border-radius: 0;">Week 2</span>
-                            <span class="text-slate-400 text-sm">Published: June 2026</span>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <span class="text-gray-900 text-xs font-bold uppercase tracking-[0.15em] border border-gray-900 px-3 py-1">Week 1</span>
+                            <span class="text-gray-500 text-sm tracking-wide">Published June 2026</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-[#2b2d28] mb-3 group-hover:text-[#787f6a] transition-colors serif-font">Economic Growth and Inequality</h3>
-                        <p class="text-slate-600 leading-relaxed mb-4">
-                            A replication of the Kuznets Curve in emerging and advanced economies. Does economic growth inherently reduce income inequality, or does human capital accumulation explain the difference?
+                        <h3 class="text-3xl font-normal text-gray-900 mb-4 group-hover:text-gray-600 transition-colors serif">The Enduring Logic of Specialization</h3>
+                        <p class="text-gray-600 leading-relaxed mb-6 font-light text-lg">
+                            Does David Ricardo's 1817 theory of comparative advantage still explain the labyrinthine patterns of modern global trade? An interactive empirical analysis of India, Brazil, Germany, and Portugal.
                         </p>
-                        <span class="text-sm font-semibold text-[#2b2d28] flex items-center group-hover:text-[#787f6a]">
-                            Read Interactive Paper <svg class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        <span class="text-sm font-semibold text-gray-900 uppercase tracking-widest flex items-center border-b border-transparent group-hover:border-gray-900 w-max pb-1 transition-all">
+                            Read Paper <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                         </span>
                     </div>
                 </div>
             </a>
 
-            <!-- WEEK 3: Placeholder -->
-            <div class="block bg-[#f4f3ef] p-8 border border-[#cbd5e1] border-dashed opacity-75" style="border-radius: 0;">
-                <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+            <!-- WEEK 2 -->
+            <a href="kuznets-curve-replication.html" class="block article-card bg-transparent p-10 relative group">
+                <div class="flex flex-col md:flex-row md:items-start justify-between gap-8">
                     <div>
-                        <div class="flex items-center space-x-3 mb-3">
-                            <span class="bg-[#cbd5e1] text-[#2b2d28] text-xs font-bold px-2 py-1 uppercase tracking-wider" style="border-radius: 0;">Week 3</span>
-                            <span class="text-slate-500 text-sm">Scheduled: Next Week</span>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <span class="text-gray-900 text-xs font-bold uppercase tracking-[0.15em] border border-gray-900 px-3 py-1">Week 2</span>
+                            <span class="text-gray-500 text-sm tracking-wide">Published June 2026</span>
                         </div>
-                        <h3 class="text-2xl font-bold text-slate-400 mb-3 serif-font">The Gravity Model in the Digital Age</h3>
-                        <p class="text-slate-500 leading-relaxed">
-                            Drafting in progress. Evaluating how physical distance and economic mass affect the trade of digital services compared to physical goods.
+                        <h3 class="text-3xl font-normal text-gray-900 mb-4 group-hover:text-gray-600 transition-colors serif">Economic Growth and Inequality</h3>
+                        <p class="text-gray-600 leading-relaxed mb-6 font-light text-lg">
+                            A replication of the Kuznets Curve in emerging and advanced economies. This study examines whether modern evidence supports the inverted-U relationship between GDP per capita and income inequality.
+                        </p>
+                        <span class="text-sm font-semibold text-gray-900 uppercase tracking-widest flex items-center border-b border-transparent group-hover:border-gray-900 w-max pb-1 transition-all">
+                            Read Paper <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </span>
+                    </div>
+                </div>
+            </a>
+
+            <!-- WEEK 3 Placeholder -->
+            <div class="block bg-transparent p-10 border border-gray-300 border-dashed opacity-60">
+                <div class="flex flex-col md:flex-row md:items-start justify-between gap-8">
+                    <div>
+                        <div class="flex items-center space-x-4 mb-4">
+                            <span class="text-gray-500 text-xs font-bold uppercase tracking-[0.15em] border border-gray-400 px-3 py-1">Week 3</span>
+                        </div>
+                        <h3 class="text-3xl font-normal text-gray-400 mb-4 serif">To Be Announced</h3>
+                        <p class="text-gray-500 leading-relaxed font-light text-lg">
+                            Drafting in progress. This upcoming publication will evaluate modern trade shifts and structural transformation.
                         </p>
                     </div>
-                    <div class="mt-4 md:mt-0 flex-shrink-0">
-                        <span class="px-4 py-2 border border-[#cbd5e1] text-slate-500 text-sm font-semibold inline-block" style="border-radius: 0;">Coming Soon</span>
-                    </div>
                 </div>
             </div>
-        </a>
 
-        <!-- Article 2 (Unpublished) -->
-        <div class="block w-full px-8 py-16 border-b border-[#2b2d28]/10 opacity-50">
-            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
-                <div class="md:col-span-2 text-sm tracking-widest text-[#2b2d28] uppercase pt-2">Week 02</div>
-                <div class="md:col-span-8">
-                    <h3 class="text-4xl md:text-5xl font-medium mb-6">The Gravity Model in the Digital Age</h3>
-                    <p class="text-lg font-light leading-relaxed text-[#2b2d28]/80 max-w-3xl">
-                        Evaluating how physical distance and economic mass affect the trade of digital services compared to physical goods.
-                    </p>
-                </div>
-                <div class="md:col-span-2 flex justify-end pt-2">
-                    <span class="text-xs tracking-[0.2em] uppercase border border-[#2b2d28] px-4 py-2">Scheduled</span>
-                </div>
-            </div>
         </div>
-
     </main>
 
-    <footer class="w-full px-8 py-16 text-center text-[#2b2d28]/60 text-sm">
-        <p class="tracking-widest uppercase text-xs mb-4">ReView Archive</p>
-        <p class="font-light">© 2026. Interactive Economic Documentation.</p>
+    <!-- Footer -->
+    <footer class="py-12 border-t border-gray-300 text-center text-gray-500 text-sm bg-white mt-auto">
+        <p class="font-medium tracking-wide uppercase text-xs text-gray-800">ReView Research Archive</p>
+        <p class="mt-3 font-light">Empirical analysis and interactive economic documentation.</p>
     </footer>
 
 </body>
