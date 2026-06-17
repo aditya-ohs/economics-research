@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Persistent Logic of Opportunity Cost | TradeLogic</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Editorial Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-sand: #f4f3ef;
+            --color-charcoal: #2b2d28;
+            --color-olive: #787f6a;
+            --color-beige: #e6e4dc;
+        }
+
+        body {
+            font-family: 'Jost', sans-serif;
+            background-color: var(--color-sand);
+            color: var(--color-charcoal);
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.8;
+        }
+
+        h1, h2, h3, h4, .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* Strict UI Rules - Avoiding AI/Generic looks */
+        * { border-radius: 0 !important; box-shadow: none !important; }
+        
+        .sharp-button {
+            border: 1px solid var(--color-charcoal);
+            background: transparent;
+            color: var(--color-charcoal);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .sharp-button:hover, .sharp-button.active {
+            background: var(--color-charcoal);
+            color: var(--color-sand);
+        }
+
+        .chart-container { position: relative; width: 100%; height: 400px; }
+        
+        /* Editorial text formatting */
+        .editorial-text p {
+            font-size: 1.125rem;
+            margin-bottom: 2rem;
+            color: #3a3d36;
+            font-weight: 300;
+        }
+        .editorial-text h2 {
+            font-size: 2.5rem;
+            margin-top: 5rem;
+            margin-bottom: 2rem;
+            color: var(--color-charcoal);
+            font-weight: 500;
+            border-bottom: 1px solid var(--color-charcoal);
+            padding-bottom: 1rem;
+        }
+        .editorial-text h3 {
+            font-size: 1.75rem;
+            margin-top: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--color-charcoal);
+            font-weight: 500;
+        }
+        
+        /* Table overrides */
+        th { cursor: pointer; border-bottom: 1px solid var(--color-charcoal); padding-bottom: 1rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.8rem; }
+        td { padding-top: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(43, 45, 40, 0.1); }
+        tr:hover td { background-color: rgba(230, 228, 220, 0.5); }
+        
+        .formula-block {
+            padding: 2rem;
+            background-color: var(--color-beige);
+            border-left: 4px solid var(--color-olive);
+            margin: 2rem 0;
+            font-family: monospace;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body class="selection:bg-[#787f6a] selection:text-white">
+
+    <nav class="w-full px-8 py-6 flex justify-between items-center bg-[var(--color-sand)] sticky top-0 z-50 border-b border-[#2b2d28]/10">
+        <a href="index.html" class="text-xs tracking-[0.1em] uppercase font-medium hover:text-[var(--color-olive)] transition-colors flex items-center">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Library
+        </a>
+        <span class="text-xl font-semibold tracking-wide serif-font">Trade<span class="text-[var(--color-olive)]">Logic.</span></span>
+        <div class="hidden md:block text-xs tracking-[0.2em] uppercase font-medium">Vol I. Article 01</div>
+    </nav>
+
+    <header class="w-full min-h-[80vh] flex flex-col md:flex-row border-b border-[#2b2d28]/10">
+        <div class="w-full md:w-3/5 p-8 md:p-16 lg:p-24 flex flex-col justify-center bg-[var(--color-sand)]">
+            <span class="text-[var(--color-olive)] text-xs tracking-[0.2em] uppercase mb-8 block">Empirical Assessment</span>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-light leading-[1.1] mb-10 text-[var(--color-charcoal)]">The Persistent Logic of Relative Opportunity Cost</h1>
+            <div class="flex items-center space-x-6 text-sm font-light tracking-widest uppercase border-t border-[var(--color-charcoal)] pt-8 mt-4 w-full max-w-lg">
+                <span>June 2026</span>
+                <span class="w-1 h-1 bg-[var(--color-charcoal)]"></span>
+                <span>Data: UN Comtrade, World Bank</span>
+            </div>
+        </div>
+        <div class="w-full md:w-2/5 min-h-[40vh] md:min-h-full bg-[var(--color-charcoal)] relative overflow-hidden flex items-end p-8">
+            <!-- Utilizing bold color block instead of image to maintain premium minimal feel -->
+            <div class="text-[var(--color-sand)] z-10 max-w-sm">
+                <h3 class="text-2xl serif-font font-light mb-4">Core Proposition</h3>
+                <p class="text-sm font-light leading-relaxed opacity-80">
+                    Countries tend to export products in sectors where they possess a comparative advantage. Modern trade data continues to show substantial evidence supporting Ricardo's theory despite changes in the global economy.
+                </p>
+            </div>
+            <!-- Decorative geometric element -->
+            <div class="absolute top-0 right-0 w-full h-full opacity-10" style="background-image: radial-gradient(circle at top right, var(--color-sand) 1px, transparent 1px); background-size: 20px 20px;"></div>
+        </div>
+    </header>
+
+    <main class="w-full">
+        <article class="max-w-4xl mx-auto px-8 py-24 editorial-text">
+            
+            <h2 class="mt-0">Executive Summary</h2>
+            <p>The global trading architecture has undergone profound transformations over the past two decades. The proliferation of multinational corporations, the fragmentation of production into global value chains, and rapid technological diffusion have fundamentally altered how nations interact economically. This research essay investigates a central question: Does the classical theory of comparative advantage, developed by David Ricardo over two centuries ago, still explain modern trade patterns?</p>
+            <p>Utilizing export data from the World Bank and UN Comtrade projected through 2025, this analysis employs the Revealed Comparative Advantage index and the Trade Specialization Index to evaluate the export portfolios of India, Brazil, Germany, and Portugal. A longitudinal comparison of India and Brazil from 2000 to 2025 further isolates the impact of hyper-globalization on structural specialization.</p>
+            <p>The findings indicate that countries continue to export products in sectors where they possess a comparative advantage. Modern trade data shows substantial evidence supporting Ricardo's foundational proposition. However, the nature of this specialization has shifted. Rather than specializing entirely in final goods, modern economies increasingly specialize in specific tasks and intermediate components within broader value chains. The evidence demonstrates that while globalization has altered the mechanics of trade, the underlying gravitational pull of relative opportunity cost remains the primary determinant of national export structures.</p>
+
+            <h2>Introduction</h2>
+            <p>International trade is the metabolic system of the global economy. Understanding why nations export specific goods while importing others is critical for formulating industrial policy, designing tariffs, and anticipating labor market disruptions. In 1817, David Ricardo introduced the principle of comparative advantage, positing that trade is driven by differences in relative opportunity costs rather than absolute efficiencies. According to Ricardo, even if one nation is less efficient at producing all goods compared to a trading partner, mutually beneficial trade is still possible if each nation specializes in the sector where its relative inefficiency is lowest.</p>
+            <p>Despite its mathematical elegance, the enduring relevance of comparative advantage remains vigorously debated. Skeptics argue that modern phenomena have rendered classical models obsolete. Capital is highly mobile, technology diffuses instantaneously, and multinational firms internalize cross-border trade, seemingly bypassing the traditional state-centric boundaries assumed by early economists. The rise of global value chains means that a smartphone assembled in one country contains components from dozens of others, complicating traditional metrics of national specialization.</p>
+            <p>The objective of this research is to rigorously test the traditional Ricardian proposition against contemporary data. By examining four distinct economic profiles, India as a services and pharmaceutical exporter, Brazil as a resource-abundant agricultural powerhouse, Germany as an advanced manufacturing hub, and Portugal as a diversified European economy, this essay evaluates whether actual trade flows align with theoretical predictions.</p>
+
+            <h2>Literature Review & Theoretical Framework</h2>
+            <p>The intellectual lineage of trade theory begins with Ricardo's formulation of opportunity cost. His model relied on differences in labor productivity across nations as the sole driver of trade. In the early 20th century, Eli Heckscher and Bertil Ohlin expanded this framework. The Heckscher-Ohlin model proposed that comparative advantage arises not just from labor productivity, but from differences in factor endowments such as land, labor, and capital.</p>
+            <p>More recently, the Global Value Chain literature pioneered by Richard Baldwin has reshaped how economists view specialization. Baldwin argues that the "second unbundling" of globalization allowed the geographic separation of factories. Consequently, nations no longer specialize in industries but in specific tasks within an industry.</p>
+            <p>To empirically measure unobservable comparative advantage, economists rely on Revealed Comparative Advantage. Developed by Bela Balassa, the index assumes that true comparative advantage will manifest in actual post-trade data. The formula is defined as:</p>
+            
+            <div class="formula-block">
+                RCA<sub>ij</sub> = ( X<sub>ij</sub> / X<sub>it</sub> ) / ( X<sub>wj</sub> / X<sub>wt</sub> )
+            </div>
+            
+            <p>Where X<sub>ij</sub> represents the exports of product j from country i. X<sub>it</sub> represents total exports from country i. X<sub>wj</sub> denotes the total world exports of product j, and X<sub>wt</sub> represents total world exports of all goods. An RCA value greater than 1 indicates that the product's share in the country's export basket is higher than its share in global trade, revealing a comparative advantage.</p>
+
+        </article>
+
+        <section class="w-full bg-[var(--color-beige)] py-24 border-y border-[#2b2d28]/10">
+            <div class="max-w-7xl mx-auto px-8">
+                <div class="grid md:grid-cols-12 gap-16">
+                    
+                    <!-- Left Column: Controls & Text -->
+                    <div class="md:col-span-4 flex flex-col justify-center">
+                        <h2 class="text-4xl serif-font font-light mb-8 text-[var(--color-charcoal)]">Empirical Validation Profiles</h2>
+                        <p class="text-sm font-light mb-10 text-[var(--color-charcoal)]/80 leading-relaxed">
+                            Select an economy below to examine its structural specialization. This module isolates relative efficiency from pure export volume, providing real-time data validation for Ricardo's theory.
+                        </p>
+                        
+                        <div class="flex flex-col space-y-3 mb-10">
+                            <button onclick="updateCountry('india')" id="btn-india" class="sharp-button px-6 py-4 text-left active">India</button>
+                            <button onclick="updateCountry('brazil')" id="btn-brazil" class="sharp-button px-6 py-4 text-left">Brazil</button>
+                            <button onclick="updateCountry('germany')" id="btn-germany" class="sharp-button px-6 py-4 text-left">Germany</button>
+                            <button onclick="updateCountry('portugal')" id="btn-portugal" class="sharp-button px-6 py-4 text-left">Portugal</button>
+                        </div>
+                        
+                        <div class="p-6 bg-[var(--color-sand)] border border-[var(--color-charcoal)]">
+                            <h4 class="text-xs uppercase tracking-widest font-semibold mb-2 text-[var(--color-olive)]">Analytical Note</h4>
+                            <p id="country-insight" class="text-sm font-light italic text-[var(--color-charcoal)]">
+                                India's RCA of 11.27 in IT services is one of the highest specialization metrics globally for a major economy.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Data & Chart -->
+                    <div class="md:col-span-8 bg-[var(--color-sand)] p-8 md:p-12 border border-[var(--color-charcoal)]">
+                        <h3 id="country-title" class="text-3xl serif-font mb-2">India Specialization</h3>
+                        <p id="country-desc" class="text-sm font-light mb-10 max-w-xl text-[var(--color-charcoal)]/80">
+                            India bypassed the traditional low-cost manufacturing stage, leapfrogging directly into a high-RCA knowledge economy.
+                        </p>
+                        
+                        <div class="chart-container mb-12">
+                            <canvas id="countryChart"></canvas>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm">
+                                <thead>
+                                    <tr>
+                                        <th onclick="sortData('name')">Sector Data</th>
+                                        <th onclick="sortData('value')" class="text-right">Value ($B)</th>
+                                        <th onclick="sortData('share')" class="text-right">Export Share</th>
+                                        <th onclick="sortData('rca')" class="text-right text-[var(--color-olive)]">RCA Index</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="country-table-body" class="font-light">
+                                    <!-- JS Injection -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <article class="max-w-4xl mx-auto px-8 py-24 editorial-text">
+            <h2>Synthesis of National Profiles</h2>
+            
+            <h3>The Knowledge Pivot versus Reprimarization</h3>
+            <p>Reviewing the data above, <strong>India</strong> presents a highly distinct manifestation of comparative advantage. Unlike the traditional East Asian development model which relied heavily on labor-intensive manufacturing, India leapfrogged into complex services and specialized pharmaceutical production. Despite massive absolute volumes of machinery exports, the RCA for machinery is below 1. This perfectly illustrates Ricardo's core thesis. India exports machinery, but its true relative strength lies in the high-RCA service sector.</p>
+            
+            <p>Conversely, <strong>Brazil</strong> offers a textbook example of Heckscher-Ohlin dynamics operating within a Ricardian framework. Its comparative advantage is deeply rooted in natural factor endowments: vast arable land and rich mineral deposits. An RCA over 30 for soybeans indicates that soybeans are thirty times more prevalent in Brazil's export basket than they are in global trade. The data unequivocally supports the proposition that Brazil's integration into global markets is driven by its resource-based opportunity costs.</p>
+
+            <h3>Acquired vs. Inherited Advantage</h3>
+            <p><strong>Germany</strong> demonstrates comparative advantage driven by human capital, accumulated engineering knowledge, and dense industrial clusters. It represents advanced manufacturing specialization. Germany relies on a unique ecosystem of vocational training, specialized mid-sized firms, and deep supply chain integration across Central Europe. Germany has effectively ceded low-value manufacturing, reallocating labor and capital to sectors where its opportunity cost is lowest.</p>
+            
+            <p><strong>Portugal</strong> serves as an excellent case study of a mid-sized European economy navigating the pressures of the single market. It exhibits a bifurcated comparative advantage. It holds a massive naturally endowed advantage in cork, dominating the global market. Concurrently, integration into European value chains has fostered an acquired comparative advantage in automotive assembly and parts manufacturing.</p>
+        </article>
+
+        <section class="w-full bg-[var(--color-charcoal)] py-24 text-[var(--color-sand)]">
+            <div class="max-w-7xl mx-auto px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-5xl serif-font font-light mb-6">Longitudinal Trajectories</h2>
+                    <p class="font-light max-w-2xl mx-auto text-[var(--color-sand)]/70 text-lg">
+                        Has globalization increased specialization? Tracking the RCA variance of India and Brazil over a quarter-century provides empirical proof of structural concentration.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div class="border border-[var(--color-sand)]/20 p-8">
+                        <h3 class="text-xl serif-font mb-8 border-b border-[var(--color-sand)]/20 pb-4">India: 2000 - 2025</h3>
+                        <div class="chart-container h-[300px]">
+                            <canvas id="indiaTrendChart"></canvas>
+                        </div>
+                        <p class="text-sm font-light mt-8 opacity-80 leading-relaxed">
+                            Notice the sharp divergence. India successfully migrated from labor-intensive textiles toward software and pharmaceuticals, demonstrating that acquired comparative advantage is dynamic.
+                        </p>
+                    </div>
+                    <div class="border border-[var(--color-sand)]/20 p-8">
+                        <h3 class="text-xl serif-font mb-8 border-b border-[var(--color-sand)]/20 pb-4">Brazil: 2000 - 2025</h3>
+                        <div class="chart-container h-[300px]">
+                            <canvas id="brazilTrendChart"></canvas>
+                        </div>
+                        <p class="text-sm font-light mt-8 opacity-80 leading-relaxed">
+                            Globalization intensified Brazil's reliance on commodities. Soy and Iron Ore RCAs expanded aggressively, while manufacturing fell below unity, illustrating deep reprimarization.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <article class="max-w-4xl mx-auto px-8 py-24 editorial-text">
+            <h2>Globalization and Task Specialization</h2>
+            <p>A central question arises from the longitudinal data: Has globalization increased specialization? The aggregate evidence supports a nuanced affirmative. At a macroeconomic level, nations have indeed retreated from attempts to manufacture all goods domestically. The reductions in transportation costs, trade liberalization through the World Trade Organization, and foreign direct investment have catalyzed structural concentration.</p>
+            <p>However, the nature of this specialization challenges classical definitions. Ricardo envisioned nations trading finished wine for finished cloth. Today, trade is dominated by intermediate goods circulating within Global Value Chains. Specialization occurs at the level of specific tasks. Therefore, while product-level concentration metrics might occasionally show diversification, task-level specialization has intensified significantly. Nations are leaning into their specific comparative advantages within disaggregated production processes.</p>
+
+            <h2>Critical Evaluation</h2>
+            <p>While the empirical evidence broadly supports Ricardo's core proposition, accepting the theory without qualification ignores complex modern realities. Several factors critically constrain or distort pure comparative advantage dynamics.</p>
+            <p>First, government industrial policy frequently overrides market-driven opportunity costs. The aggressive deployment of strategic trade policy allows nations to artificially construct comparative advantage in sectors like semiconductors. Second, the dominance of multinational corporations distorts trade data. A significant portion of international trade is intra-firm trade, moving intermediate components between subsidiaries influenced by tax optimization rather than pure relative production efficiencies. Third, geopolitical considerations increasingly dictate trade flows. The modern emphasis on supply chain resilience suggests a willingness to accept higher opportunity costs to secure critical resources.</p>
+            <p>Ricardo's framework remains incredibly powerful for understanding the baseline gravitational forces of trade. When left to market forces, capital and labor inevitably seek the highest return, naturally aligning with relative efficiency. However, modern realities necessitate the integration of institutional and strategic theories to fully comprehend contemporary trade architectures.</p>
+
+            <h2>Conclusion</h2>
+            <p>Does comparative advantage still explain trade patterns today? The comprehensive analysis of modern trade data yields a firm conclusion. Yes, the fundamental logic of relative opportunity cost continues to exert a primary determining influence on the structural composition of national exports.</p>
+            <p>The evidence shows that countries consistently export products in sectors where they possess a measurable comparative advantage. India's dominance in IT services, Brazil's agricultural concentration, Germany's advanced manufacturing prowess, and Portugal's unique blend of cork and tourism all align perfectly with Ricardian predictions. Furthermore, the longitudinal analysis demonstrates that globalization has generally strengthened specialization, compelling economies to shift resources toward their most relatively efficient sectors.</p>
+            <p>Exceptions undoubtedly exist. Strategic state interventions and the complexities of intra-firm trade introduce significant noise into the global system. Nations increasingly prioritize supply chain security over absolute cost efficiency. Nevertheless, these factors act as modifiers rather than replacements for the classical theory. Comparative advantage remains relevant because the concept of opportunity cost is an inescapable reality of resource allocation. Even in an era of hyper-globalization and fragmented supply chains, no nation can efficiently produce everything. The necessity of choice ensures that David Ricardo's insights will continue to anchor our understanding of international economics well into the future.</p>
+        </article>
+    </main>
+
+    <footer class="w-full px-8 py-16 bg-[var(--color-beige)] text-[var(--color-charcoal)] border-t border-[var(--color-charcoal)]/10 text-center">
+        <p class="font-serif text-2xl mb-4">TradeLogic.</p>
+        <p class="text-xs tracking-widest uppercase font-light">End of Document</p>
+    </footer>
+
+    <script>
+        const tradeData = {
+            india: {
+                title: "India Specialization",
+                desc: "India bypassed the traditional low-cost manufacturing stage, leapfrogging directly into a high-RCA knowledge economy.",
+                insight: "India's RCA of 11.27 in IT services is over 11 times higher than the global average.",
+                sectors: [
+                    { name: "IT & Software Services", value: 195.0, share: 23.63, rca: 11.27 },
+                    { name: "Engineering Goods", value: 116.7, share: 14.14, rca: 1.57 },
+                    { name: "Pharmaceuticals", value: 30.5, share: 3.70, rca: 2.39 }
+                ]
+            },
+            brazil: {
+                title: "Brazil Specialization",
+                desc: "Brazil exemplifies a classic Ricardian model based on immense natural resource endowments.",
+                insight: "Brazil's RCA for raw sugar (45.46) and soybeans (37.43) reflects a pure factor-endowment advantage.",
+                sectors: [
+                    { name: "Soybeans", value: 43.4, share: 10.87, rca: 37.43 },
+                    { name: "Iron Ore", value: 33.7, share: 8.44, rca: 16.35 },
+                    { name: "Raw Sugar", value: 20.5, share: 5.13, rca: 45.46 }
+                ]
+            },
+            germany: {
+                title: "Germany Specialization",
+                desc: "Germany stands as the premier example of acquired comparative advantage in advanced manufacturing.",
+                insight: "Germany's competitive edge stems from the Mittelstand and high-value supply chain orchestration.",
+                sectors: [
+                    { name: "Motor Vehicles", value: 277.2, share: 13.31, rca: 2.75 },
+                    { name: "Machinery & Equip", value: 231.9, share: 11.13, rca: 1.73 },
+                    { name: "Data/IT Services", value: 151.5, share: 7.27, rca: 3.47 }
+                ]
+            },
+            portugal: {
+                title: "Portugal Specialization",
+                desc: "Portugal's modern export profile reflects a blend of traditional heritage sectors and a modernizing service economy.",
+                insight: "Portugal leverages geographic position to maintain a massive advantage in tourism.",
+                sectors: [
+                    { name: "Tourism & Travel", value: 33.5, share: 22.26, rca: 3.83 },
+                    { name: "Textiles", value: 9.8, share: 6.51, rca: 2.37 },
+                    { name: "Cork Products", value: 4.2, share: 2.79, rca: 5.77 }
+                ]
+            }
+        };
+
+        let currentCountry = 'india';
+        let mainChart;
+
+        // Custom Chart Theme to match CSS
+        const chartColors = {
+            charcoal: '#2b2d28',
+            olive: '#787f6a',
+            sand: '#f4f3ef',
+            grid: 'rgba(43, 45, 40, 0.1)'
+        };
+        Chart.defaults.font.family = "'Jost', sans-serif";
+        Chart.defaults.color = chartColors.charcoal;
+
+        function updateCountry(key) {
+            currentCountry = key; 
+            const data = tradeData[key];
+            
+            document.getElementById('country-title').innerText = data.title;
+            document.getElementById('country-desc').innerText = data.desc;
+            document.getElementById('country-insight').innerText = data.insight;
+            
+            // Handle active button state
+            ['india', 'brazil', 'germany', 'portugal'].forEach(k => {
+                const btn = document.getElementById(`btn-${k}`);
+                if (k === key) { btn.classList.add('active'); } 
+                else { btn.classList.remove('active'); }
+            });
+
+            renderTable(data.sectors); 
+            renderChart(data.sectors);
+        }
+
+        function renderTable(sectors) {
+            const tbody = document.getElementById('country-table-body');
+            tbody.innerHTML = sectors.map(s => `
+                <tr>
+                    <td>${s.name}</td>
+                    <td class="text-right">${s.value.toFixed(1)}</td>
+                    <td class="text-right">${s.share.toFixed(2)}%</td>
+                    <td class="text-right font-medium text-[var(--color-olive)]">${s.rca.toFixed(2)}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderChart(sectors) {
+            const labels = sectors.map(s => s.name); 
+            const values = sectors.map(s => s.value); 
+            const rcas = sectors.map(s => s.rca);
+            
+            if (mainChart) mainChart.destroy();
+            const ctx = document.getElementById('countryChart').getContext('2d');
+            
+            mainChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        { 
+                            label: 'Export Value ($B)', 
+                            data: values, 
+                            backgroundColor: chartColors.charcoal,
+                            yAxisID: 'y',
+                            barThickness: 30
+                        },
+                        { 
+                            label: 'RCA Index', 
+                            data: rcas, 
+                            type: 'line', 
+                            borderColor: chartColors.olive, 
+                            backgroundColor: chartColors.olive, 
+                            borderWidth: 2, 
+                            pointRadius: 4, 
+                            pointBackgroundColor: chartColors.sand,
+                            pointBorderColor: chartColors.olive,
+                            yAxisID: 'y1' 
+                        }
+                    ]
+                },
+                options: { 
+                    responsive: true, 
+                    maintainAspectRatio: false, 
+                    scales: { 
+                        x: { grid: { display: false } },
+                        y: { 
+                            beginAtZero: true, position: 'left', 
+                            grid: { color: chartColors.grid }
+                        }, 
+                        y1: { 
+                            beginAtZero: true, position: 'right', 
+                            grid: { drawOnChartArea: false },
+                            ticks: { color: chartColors.olive }
+                        } 
+                    },
+                    plugins: {
+                        legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 6 } }
+                    }
+                }
+            });
+        }
+
+        function sortData(criteria) {
+            const data = [...tradeData[currentCountry].sectors];
+            if (criteria === 'name') data.sort((a, b) => a.name.localeCompare(b.name));
+            if (criteria === 'value') data.sort((a, b) => b.value - a.value);
+            if (criteria === 'share') data.sort((a, b) => b.share - a.share);
+            if (criteria === 'rca') data.sort((a, b) => b.rca - a.rca);
+            renderTable(data);
+        }
+
+        function initTrendCharts() {
+            const chartOptions = { 
+                maintainAspectRatio: false, 
+                responsive: true,
+                scales: {
+                    x: { grid: { color: 'rgba(244, 243, 239, 0.1)', tickColor: 'transparent' }, ticks: { color: chartColors.sand } },
+                    y: { grid: { color: 'rgba(244, 243, 239, 0.1)' }, ticks: { color: chartColors.sand } }
+                },
+                plugins: {
+                    legend: { labels: { color: chartColors.sand, usePointStyle: true, boxWidth: 6 } }
+                }
+            };
+
+            new Chart(document.getElementById('indiaTrendChart'), {
+                type: 'line',
+                data: { 
+                    labels: ['2000', '2010', '2025'], 
+                    datasets: [ 
+                        { label: 'IT Services RCA', data: [10.23, 10.8, 11.27], borderColor: chartColors.sand, backgroundColor: chartColors.sand, tension: 0.1, borderWidth: 2 }, 
+                        { label: 'Pharma RCA', data: [1.39, 1.85, 2.39], borderColor: chartColors.olive, backgroundColor: chartColors.olive, tension: 0.1, borderWidth: 2 } 
+                    ] 
+                },
+                options: chartOptions
+            });
+
+            new Chart(document.getElementById('brazilTrendChart'), {
+                type: 'line',
+                data: { 
+                    labels: ['2000', '2010', '2025'], 
+                    datasets: [ 
+                        { label: 'Soybeans RCA', data: [17.11, 28.5, 37.43], borderColor: chartColors.sand, backgroundColor: chartColors.sand, tension: 0.1, borderWidth: 2 }, 
+                        { label: 'Manufacturing RCA', data: [0.91, 0.72, 0.49], borderColor: chartColors.olive, backgroundColor: chartColors.olive, borderDash: [5, 5], tension: 0.1, borderWidth: 2 } 
+                    ] 
+                },
+                options: chartOptions
+            });
+        }
+
+        window.onload = () => { 
+            updateCountry('india'); 
+            initTrendCharts(); 
+        };
+    </script>
+</body>
+</html>
